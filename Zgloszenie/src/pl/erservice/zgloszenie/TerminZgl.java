@@ -18,6 +18,7 @@ class TerminZgl {
 	private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
 	private Statement st;
+	private int max_id;
 	
 	public ArrayList<Integer> getId() {
 		return this.id;
@@ -161,20 +162,17 @@ class TerminZgl {
 		}
 	}
 	
-	public String[] tTerminZgl() {
+	public int tTerminZgl() {
 		this.selectTerminZgl();
-		String konwersjaS[] = new String[this.data_zgl.size()];
 		try{
 			ResultSet wynik = st.executeQuery("SELECT seq FROM sqlite_sequence WHERE name = 'termin_zgl'");
-			while(wynik.next()) {
-				this.setData(wynik.getString("seq"));
-			}
-			konwersjaS = this.data_zgl.toArray(konwersjaS);
+			this.max_id = wynik.getInt("seq");
+			max_id = max_id + 1;
 		}
 			catch(SQLException e) {
 				e.printStackTrace();
 			}
-		return konwersjaS;
+		return max_id;
 	}
 	
 	public void closeConn() {		// kończy połączenie z bazą danych 'HD.db'

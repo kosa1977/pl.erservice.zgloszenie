@@ -13,9 +13,9 @@ import javax.swing.table.DefaultTableModel;
 
 class Zgloszenie {
 	private ArrayList<Integer> id = new ArrayList<Integer>();
-	private ArrayList<Integer> id_komorki = new ArrayList<Integer>();
-	private ArrayList<Integer> id_opisu = new ArrayList<Integer>();
-	private ArrayList<Integer> id_term_zgl = new ArrayList<Integer>();
+	private ArrayList<String> nazwa_komorki = new ArrayList<String>();
+	private ArrayList<String> nazwa_opisu = new ArrayList<String>();
+	private ArrayList<String> data_zgl = new ArrayList<String>();
 	private static final String DRIVER = "org.sqlite.JDBC";
 	private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
@@ -25,32 +25,32 @@ class Zgloszenie {
 		return this.id;
 	}
 	
-	public ArrayList<Integer> getIdKomorki() {
-		return this.id_komorki;
+	public ArrayList<String> getNazwaKomorki() {
+		return this.nazwa_komorki;
 	}
 	
-	public ArrayList<Integer> getIdOpisu() {
-		return this.id_opisu;
+	public ArrayList<String> getNazwaOpisu() {
+		return this.nazwa_opisu;
 	}
 	
-	public ArrayList<Integer> getIdTermZgl() {
-		return this.id_term_zgl;
+	public ArrayList<String> getDataZgl() {
+		return this.data_zgl;
 	}
 	
 	public void setId(int id) {
 		this.id.add(id);
 	}
 	
-	public void setIdKomorki(int id_komorki) {
-		this.id_komorki.add(id_komorki);
+	public void setNazwaKomorki(String nazwa_komorki) {
+		this.nazwa_komorki.add(nazwa_komorki);
 	}
 	
-	public void setIdOpisu(int id_opisu) {
-		this.id_opisu.add(id_opisu);
+	public void setNazwaOpisu(String nazwa_opisu) {
+		this.nazwa_opisu.add(nazwa_opisu);
 	}
 	
-	public void setIdTermZgl(int id_term_zgl) {
-		this.id_opisu.add(id_term_zgl);
+	public void setDataZgl(String data_zgl) {
+		this.data_zgl.add(data_zgl);
 	}
 	
 	public Zgloszenie() {
@@ -58,11 +58,11 @@ class Zgloszenie {
 		this.poplaczZbaza();
 	}
 	
-	public Zgloszenie(int id,int id_komorki, int id_opisu, int id_term_zgl) {
+	public Zgloszenie(int id,String nazwa_komorki, String nazwa_opisu, String data_zgl) {
 		this.id.add(id);
-		this.id_komorki.add(id_komorki);
-		this.id_opisu.add(id_opisu);
-		this.id_term_zgl.add(id_term_zgl);
+		this.nazwa_komorki.add(nazwa_komorki);
+		this.nazwa_opisu.add(nazwa_opisu);
+		this.data_zgl.add(data_zgl);
 		this.poplaczZbaza();
 	}
 	
@@ -101,6 +101,23 @@ class Zgloszenie {
 		}
 		catch(SQLException e2) {
 			e2.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean insertInitialRecords() {
+		try {
+			PreparedStatement ps_initial_opis = conn.prepareStatement("INSERT INTO opis values(null, ?);");
+			ps_initial_opis.setString(1, "initial record");
+			ps_initial_opis.execute();
+			
+			PreparedStatement ps_initial_termin_zgl = conn.prepareStatement("INSERT INTO termin_zgl values(null, ?)");
+			ps_initial_termin_zgl.setString(1, "2000-10-10");
+			ps_initial_termin_zgl.execute();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -161,14 +178,14 @@ class Zgloszenie {
 		return true;
 	}
 	
-	public void selectZgloszenie() {					// podstawia wynik zapytania SQL do metody set i przekazuje pól klasy 'Komorka'.
+	public void selectZgloszenie() {					// podstawia wynik zapytania SQL do metody set i przekazuje pól klasy 'Zgloszenie'.
 		try{
-			ResultSet wynik = st.executeQuery("SELECT * FROM zgloszenie");
+			ResultSet wynik = st.executeQuery("SELECT z.id, k.nazwa_komorki, t.data_zgl, o.nazwa_opisu FROM zgloszenie AS z LEFT JOIN komorka AS k ON z.id_komorki = k.id_komorki LEFT JOIN opis AS o ON z.id_opisu = o.id_opisu LEFT JOIN termin_zgl AS t ON z.id_term_zgl = t.id_term_zgl ORDER BY z.id;");
 			while(wynik.next()) {
 				this.setId(wynik.getInt("id"));
-				this.setIdKomorki(wynik.getInt("id_komorki"));
-				this.setIdOpisu(wynik.getInt("id_opisu"));
-				this.setIdOpisu(wynik.getInt("id_term_zgl"));
+				this.setNazwaKomorki(wynik.getString("nazwa_komorki"));
+				this.setNazwaOpisu(wynik.getString("nazwa_opisu"));
+				this.setDataZgl(wynik.getString("data_zgl"));
 			}
 		}
 		catch(SQLException e5) {
@@ -176,12 +193,12 @@ class Zgloszenie {
 		}
 	}
 	
-	public void showZgloszenie(JTable table1 , DefaultTableModel model)	{				// wywołuje metode 'selectKomorka'; pobiera dane z bazy;
-		this.selectZgloszenie();								// za pomoca metod klasy 'Komorka' podstawia dane do pól i konfiguruje 'DefaultTableModel';
+	public void showZgloszenie(JTable table1 , DefaultTableModel model)	{				// wywołuje metode 'selectZgloszenie'; pobiera dane z bazy;
+		this.selectZgloszenie();							// za pomoca metod klasy 'KZgloszenie' podstawia dane do pól i konfiguruje 'DefaultTableModel';
 		Integer konwersjaI[] = new Integer[this.id.size()]; // podstawia do JTable 'tabela' model 'DefaultTableModel' 
-		Integer konwersjaS[] = new Integer[this.id_komorki.size()];
-		Integer konwersjaOpisu[] = new Integer[this.id_opisu.size()];
-		Integer konwersjaTermZgl[] = new Integer[this.id_term_zgl.size()];
+		String konwersjaS[] = new String[this.nazwa_komorki.size()];
+		String konwersjaOpisu[] = new String[this.nazwa_opisu.size()];
+		String konwersjaTermZgl[] = new String[this.data_zgl.size()];
 		
 		@SuppressWarnings("serial")	//krzykacz dot. serializacji obiektu
 		DefaultTableModel mojModel = new DefaultTableModel() {
@@ -193,9 +210,9 @@ class Zgloszenie {
 		
 		Object[] columnNames = new Object[4];
 		columnNames[0] = "id";
-		columnNames[1] = "id_komorki";
-		columnNames[2] = "id_opisu";
-		columnNames[3] = "id_term_zgl";
+		columnNames[1] = "nazwa_komorki";
+		columnNames[2] = "nazwa_opisu";
+		columnNames[3] = "data_zgl";
 		mojModel.setColumnIdentifiers(columnNames);
 		
 		JTable tabela = new JTable();
@@ -204,9 +221,9 @@ class Zgloszenie {
 		
 		
 		konwersjaI = this.id.toArray(konwersjaI);
-		konwersjaS = this.id_komorki.toArray(konwersjaS);
-		konwersjaOpisu = this.id_opisu.toArray(konwersjaOpisu);
-		konwersjaTermZgl = this.id_term_zgl.toArray(konwersjaTermZgl);
+		konwersjaS = this.nazwa_komorki.toArray(konwersjaS);
+		konwersjaOpisu = this.nazwa_opisu.toArray(konwersjaOpisu);
+		konwersjaTermZgl = this.data_zgl.toArray(konwersjaTermZgl);
 		
 		Object[] obj = new Object[4];
 		for(int i = 0; i < konwersjaI.length; i++) {

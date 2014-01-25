@@ -79,7 +79,7 @@ class Opis {
 	
 	public boolean insertOpis(String nazwa_opisu) {	// wstawia dane do tabeli 'komorka' w bazie 'HD.db'
 		try{
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO opis values(null, ?);");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO opis values(null, ?, ?);");
 			ps.setString(1, nazwa_opisu);
 			ps.execute();
 		}
@@ -172,8 +172,6 @@ class Opis {
 			catch(SQLException e) {
 				e.printStackTrace();
 			}
-		//String max_id_s;
-		//max_id_s = String.valueOf(max_id);
 		return max_id;
 	}
 	

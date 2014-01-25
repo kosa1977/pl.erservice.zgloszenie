@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/Java/Outer_Library_Jar/sqlite-jdbc-3.8.0-20130827.035027-1.jar" sourcepath="D:/Java/Outer_Library_Jar/sqlite-jdbc-3.8.0-20130827.035027-1-sources.jar">
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="D:/Java/Outer_Library_Jar/sqlite-jdbc-3.8.0-20130827.035027-1.jar" sourcepath="D:/Java/Outer_Library_Jar/sqlite-jdbc-3.8.0-20130827.035027-1-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/D:/Java/Outer_Library_Jar/sqlite-jdbc-3.8.0-20130827.035027-1-javadoc.jar!/"/>
 		</attributes>

@@ -89,11 +89,26 @@ public class Zgloszenie2GUI extends JFrame {
 		comboBoxKomorka.setBounds(10, 11, 129, 20);
 		comboBoxKomorka.setSelectedIndex(-1);		//po kompilacji zmienić na 4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		panelZgloszenie.add(comboBoxKomorka);
+		kom.closeConn();
 		
 		fTextFieldTerminZgl = new JFormattedTextField();
 		fTextFieldTerminZgl.setToolTipText("Wprowadź datę i godzinę zgłoszenia");
 		fTextFieldTerminZgl.setBounds(513, 11, 122, 20);
 		panelZgloszenie.add(fTextFieldTerminZgl);
+		
+		
+		JButton btnInitialRecords = new JButton("Inicjalizacja");
+		btnInitialRecords.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//tu rekord inicjalizacyjny z klasy Zgloszenie.
+				Zgloszenie zgl = new Zgloszenie();
+				zgl.insertInitialRecords();	
+				zgl.closeConn();
+			}
+		});
+		btnInitialRecords.setToolTipText("Inicjalizacja bazy.");
+		btnInitialRecords.setBounds(3, 147, 136, 23);
+		panelZgloszenie.add(btnInitialRecords);
 		
 		JButton btnAddZgloszenie = new JButton("Dodaj Zgłoszenie");
 		btnAddZgloszenie.addActionListener(new ActionListener() {
@@ -116,28 +131,40 @@ public class Zgloszenie2GUI extends JFrame {
 				String data_zgl = fTextFieldTerminZgl.getText();
 				TerminZgl tZgl1 = new TerminZgl();
 				tZgl1.tTerminZgl();
-				int z = tZgl1.tTerminZgl().length;
 				int max_id_termZgl = 0;
-				String t1[] = new String[z];
-				for(int j = 0; j < z; j++) {
-					t1[j] = tZgl1.tTerminZgl()[j];
-					max_id_termZgl = j;
-				}// koniec tego samego co poniżej dla TerminZgl
+				max_id_termZgl = tZgl1.tTerminZgl();
+				JOptionPane.showMessageDialog(null, "max_id_termZgl = "+max_id_termZgl);
+				tZgl1.closeConn();
+				
+				// koniec tego samego co poniżej dla TerminZgl
 				
 				Opis tOpis1 = new Opis();
-				int max_id_opisu = 1;
+				int max_id_opisu = 0;
 				max_id_opisu = tOpis1.tOpis_id();
 				JOptionPane.showMessageDialog(null, "max_id_opisu = "+max_id_opisu);
+				tOpis1.closeConn();
 				
 				Zgloszenie zgl1 = new Zgloszenie();
-				//zgl1.insertZgloszenie(Integer.parseInt(id_komorki), max_id_termZgl, max_id_opisu, nazwa_komorki, nazwa_opisu, data_zgl);
+				zgl1.insertZgloszenie(Integer.parseInt(id_komorki), max_id_termZgl, max_id_opisu, nazwa_komorki, nazwa_opisu, data_zgl);
 				zgl1.closeConn();
 			}
 		});
 		btnAddZgloszenie.setToolTipText("Dodaje kolejne zgłoszenie do bazy");
 		btnAddZgloszenie.setBounds(513, 147, 136, 23);
-		panelZgloszenie.add(btnAddZgloszenie);
+		panelZgloszenie.add(btnAddZgloszenie);		
 		
+		JButton btnShowZgloszenia = new JButton("Zgłoszenia");
+		btnShowZgloszenia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// tu pokaż zgłoszenia //
+				Zgloszenie zgl = new Zgloszenie();
+				zgl.showZgloszenie(table, model);
+				zgl.closeConn();
+			}
+		});
+		btnShowZgloszenia.setToolTipText("Pkaż wszystkie zgłoszenia");
+		btnShowZgloszenia.setBounds(513, 117, 136, 23);
+		panelZgloszenie.add(btnShowZgloszenia);
 		
 		
 		JPanel panelKomorka = new JPanel();
@@ -192,6 +219,7 @@ public class Zgloszenie2GUI extends JFrame {
 					model.removeRow(Integer.parseInt(input));
 				}
 				kom.showKomorka(table, model);
+				kom.closeConn();
 			}
 		});
 		btnRemoveSelected.setBounds(10, 110, 120, 23);
@@ -208,6 +236,7 @@ public class Zgloszenie2GUI extends JFrame {
 					kom.modifyKomorka(Integer.parseInt(input), input2);
 				}
 				kom.showKomorka(table, model);
+				kom.closeConn();
 			}
 		});
 		btnModyfikuj.setToolTipText("Edytuj wiersz tabeli 'komorka'");
