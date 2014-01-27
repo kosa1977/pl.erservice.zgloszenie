@@ -56,6 +56,7 @@ class Status {
 		try{
 			conn = DriverManager.getConnection(url);
 			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
 		}
 		catch(SQLException e1) {
 			e1.printStackTrace();
@@ -127,7 +128,7 @@ class Status {
 		}
 	}
 	
-	public void showKomorka(JTable table1 , DefaultTableModel model)	{				// wywołuje metode 'selectStatus'; pobiera dane z bazy;
+	public void showStatus(JTable table1 , DefaultTableModel model)	{				// wywołuje metode 'selectStatus'; pobiera dane z bazy;
 		this.selectStatus();								// za pomoca metod klasy 'Status' podstawia dane do pól i konfiguruje 'DefaultTableModel';
 		Integer konwersjaI[] = new Integer[this.id.size()]; // podstawia do JTable 'tabela' model 'DefaultTableModel' 
 		String konwersjaS[] = new String[this.nazwa_statusu.size()];
@@ -141,8 +142,8 @@ class Status {
 		};
 		
 		Object[] columnNames = new Object[2];
-		columnNames[0] = "id_komorki";
-		columnNames[1] = "nazwa_komorki";
+		columnNames[0] = "id_statusu";
+		columnNames[1] = "nazwa_statusu";
 		mojModel.setColumnIdentifiers(columnNames);
 		
 		JTable tabela = new JTable();

@@ -57,6 +57,7 @@ class Opis {
 		try{
 			conn = DriverManager.getConnection(url);
 			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
 		}
 		catch(SQLException e1) {
 			e1.printStackTrace();

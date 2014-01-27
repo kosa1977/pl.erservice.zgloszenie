@@ -56,6 +56,7 @@ class Komorka  {
 		try{
 			conn = DriverManager.getConnection(url);
 			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
 		}
 		catch(SQLException e1) {
 			e1.printStackTrace();
@@ -165,15 +166,11 @@ class Komorka  {
 		this.selectKomorka();
 		ArrayList<String> nazwa_komorkiT = new ArrayList<String>();
 		String konwersjaS[] = new String[nazwa_komorkiT.size()];
-		//ArrayList<Integer> id_komorkiT = new ArrayList<Integer>();
-		//String konwersjaI[] = new String[id_komorkiT.size()];
 		try{
 			ResultSet wynik = st.executeQuery("SELECT * FROM komorka");
 			while(wynik.next()) {
 				nazwa_komorkiT.add(wynik.getInt("id_komorki")+ " " + wynik.getString("nazwa_komorki") );
-				//nazwa_komorkiT.add(wynik.getString("nazwa_komorki"));
 			}
-			//konwersjaI = id_komorkiT.toArray(konwersjaI);
 			konwersjaS = nazwa_komorkiT.toArray(konwersjaS);
 		}
 			catch(SQLException e) {
