@@ -241,6 +241,25 @@ class Zgloszenie {
 		}
 	}
 	
+	public int[] selectID(int id) {
+		int id_wynik[] = new int[5];
+		try {
+			String query = "SELECT id_komorki, id_opisu, id_statusu, id_term_zgl, id_term_wymag FROM zgloszenie WHERE id = " + id;
+			ResultSet wynik = st.executeQuery(query);
+			int id_komorki = wynik.getInt("id_komorki");
+			int id_opisu = wynik.getInt("id_opisu");
+			int id_statusu = wynik.getInt("id_statusu");
+			int id_term_zgl = wynik.getInt("id_term_zgl");
+			int id_term_wymag = wynik.getInt("id_term_wymag");
+			for(int i = 1 ; i < 5; i++) {
+				id_wynik[i] = wynik.getInt(i);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id_wynik;
+	}
+	
 	public void showZgloszenie(JTable table1 , DefaultTableModel model)	{				// wywołuje metode 'selectZgloszenie'; pobiera dane z bazy;
 		this.selectZgloszenie();							// za pomoca metod klasy 'KZgloszenie' podstawia dane do pól i konfiguruje 'DefaultTableModel';
 		Integer konwersjaI[] = new Integer[this.id.size()]; // podstawia do JTable 'tabela' model 'DefaultTableModel' 
