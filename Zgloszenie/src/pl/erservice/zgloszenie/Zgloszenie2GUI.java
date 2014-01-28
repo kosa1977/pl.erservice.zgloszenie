@@ -220,7 +220,7 @@ public class Zgloszenie2GUI extends JFrame {
 				//z1.selectID(id);
 				int dl = z1.selectID(id).length;
 				JOptionPane.showMessageDialog(null, dl);
-				int id_komorki = z1.selectID(id)[2];
+				int id_komorki = z1.selectID(id)[2];;;
 				JOptionPane.showMessageDialog(null, "id_komorki: "+id_komorki);
 				z1.closeConn();
 			}
