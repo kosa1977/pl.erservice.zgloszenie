@@ -207,22 +207,11 @@ class Zgloszenie {
 	public boolean modifyZgloszenie(int id_komorki, int id_opisu, int id_statusu, int id_term_zgl, int id_term_wymag, int id,
 			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag)	{
 		try {
-			/*
-			PreparedStatement ps_komorka = conn.prepareStatement("UPDATE komorka SET nazwa_komorki = ? WHERE id_komorki = ?;");
-			ps_komorka.setString(1, nazwa_komorki);
-			ps_komorka.setInt(2, id_komorki);
-			ps_komorka.executeUpdate();
-			*/
 			PreparedStatement ps_opis = conn.prepareStatement("UPDATE opis SET nazwa_opisu = ? WHERE id_opisu = ?;");
 			ps_opis.setString(1, nazwa_opisu);
 			ps_opis.setInt(2, id_opisu);
 			ps_opis.executeUpdate();
-			/*
-			PreparedStatement ps_statusu = conn.prepareStatement("UPDATE status SET nazwa_statusu = ? WHERE id_statusu = ?;");
-			ps_statusu.setString(1, nazwa_statusu);
-			ps_statusu.setInt(2, id_statusu);
-			ps_statusu.executeUpdate();
-			*/
+
 			PreparedStatement ps_term_zgl = conn.prepareStatement("UPDATE termin_zgl SET data_zgl = ? WHERE id_term_zgl = ?;");
 			ps_term_zgl.setString(1, data_zgl);
 			ps_term_zgl.setInt(2, id_term_zgl);
@@ -234,13 +223,7 @@ class Zgloszenie {
 			ps_term_wymag.executeUpdate();
 			
 			//najpierw modyfikujemy pozostałe tabele poza 'komorka' i 'status' (tym ewentualnie zmienia się id w 'zgloszenie') na końcu 'zgloszenie'
-			String query = "UPDATE zgloszenie SET id_komorki = "+id_komorki+","
-					+"SET id_opisu = "+id_opisu+", SET id_statusu = ?"+id_statusu+","
-					+"SET id_term_zgl = ?"+id_term_zgl+","
-					+"SET id_term_wymag = ?"+id_term_wymag
-					+" WHERE id = ?"+id+";";
-			PreparedStatement ps = conn.prepareStatement("UPDATE zgloszenie SET id_komorki = ?, SET id_opisu = ?, SET id_statusu = ?, SET id_term_zgl = ?, SET id_term_wymag = ? WHERE id = ?;");
-			//PreparedStatement ps = conn.prepareStatement(query);
+			PreparedStatement ps = conn.prepareStatement("UPDATE zgloszenie SET id_komorki = ?, id_opisu = ?, id_statusu = ?, id_term_zgl = ?, id_term_wymag = ? WHERE id = ?;");
 			ps.setInt(1, id_komorki);
 			ps.setInt(2, id_opisu);
 			ps.setInt(3, id_statusu);

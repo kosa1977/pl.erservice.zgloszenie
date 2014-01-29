@@ -31,6 +31,7 @@ import java.awt.GridLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JSeparator;
 
 public class Zgloszenie2GUI extends JFrame {
 
@@ -149,8 +150,8 @@ public class Zgloszenie2GUI extends JFrame {
 						i--;
 					}
 				}
-				JOptionPane.showMessageDialog(null, id_komorki);
-				JOptionPane.showMessageDialog(null, nazwa_komorki);
+				//JOptionPane.showMessageDialog(null, id_komorki);
+				//JOptionPane.showMessageDialog(null, nazwa_komorki);
 				
 				String tmp2 = (String)comboBoxStatus.getSelectedItem();
 				String id_statusu = "";
@@ -163,8 +164,8 @@ public class Zgloszenie2GUI extends JFrame {
 						j--;
 					}
 				}
-				JOptionPane.showMessageDialog(null, id_statusu);
-				JOptionPane.showMessageDialog(null, nazwa_statusu);
+				//JOptionPane.showMessageDialog(null, id_statusu);
+				//JOptionPane.showMessageDialog(null, nazwa_statusu);
 				
 				String nazwa_opisu = textAreaNazwaOpisu2.getText();
 				String data_zgl = fTextFieldTerminZgl.getText();
@@ -173,7 +174,6 @@ public class Zgloszenie2GUI extends JFrame {
 				tZgl1.tTerminZgl();
 				int max_id_termZgl = 0;
 				max_id_termZgl = tZgl1.tTerminZgl();
-				JOptionPane.showMessageDialog(null, "max_id_termZgl = "+max_id_termZgl);
 				tZgl1.closeConn();
 				
 				// koniec tego samego co poniżej dla TerminZgl
@@ -181,18 +181,17 @@ public class Zgloszenie2GUI extends JFrame {
 				Opis tOpis1 = new Opis();
 				int max_id_opisu = 0;
 				max_id_opisu = tOpis1.tOpis_id();
-				JOptionPane.showMessageDialog(null, "max_id_opisu = "+max_id_opisu);
 				tOpis1.closeConn();
 				
 				//teraz dla TerminWymag
 				TerminWymag tw1 = new TerminWymag();
 				int max_id_termWymag = 0;
 				max_id_termWymag = tw1.tTerminWymag();
-				JOptionPane.showMessageDialog(null, "max_id_termWymag = "+max_id_termWymag);
 				tw1.closeConn();
 				
 				Zgloszenie zgl1 = new Zgloszenie();
-				zgl1.insertZgloszenie(Integer.parseInt(id_komorki), max_id_termZgl, max_id_termWymag, max_id_opisu, Integer.parseInt(id_statusu), nazwa_komorki, nazwa_opisu, nazwa_statusu, data_zgl, data_wymag);
+				zgl1.insertZgloszenie(Integer.parseInt(id_komorki), max_id_termZgl, max_id_termWymag, max_id_opisu, Integer.parseInt(id_statusu),
+						nazwa_komorki, nazwa_opisu, nazwa_statusu, data_zgl, data_wymag);
 				zgl1.closeConn();
 			}
 		});
@@ -220,18 +219,18 @@ public class Zgloszenie2GUI extends JFrame {
 				int id;
 				id = Integer.parseInt(txtIdZgoszenia.getText());
 				//z1.selectID(id);
-				int dl = z1.selectID(id).length;
-				JOptionPane.showMessageDialog(null, dl);
+				//int dl = z1.selectID(id).length;
+				//JOptionPane.showMessageDialog(null, dl);
 				int id_komorki2 = z1.selectID(id)[1];
-				JOptionPane.showMessageDialog(null, "id_komorki: "+id_komorki2);
+				//JOptionPane.showMessageDialog(null, "id_komorki: "+id_komorki2);
 				int id_opisu = z1.selectID(id)[2];
-				JOptionPane.showMessageDialog(null, "id_opisu: "+id_opisu);
+				//JOptionPane.showMessageDialog(null, "id_opisu: "+id_opisu);
 				int id_statusu2 = z1.selectID(id)[3];
-				JOptionPane.showMessageDialog(null, "id_statusu: "+id_statusu2);
+				//JOptionPane.showMessageDialog(null, "id_statusu: "+id_statusu2);
 				int id_term_zgl = z1.selectID(id)[4];
-				JOptionPane.showMessageDialog(null, "id_term_zgl: "+id_term_zgl);
+				//JOptionPane.showMessageDialog(null, "id_term_zgl: "+id_term_zgl);
 				int id_term_wymag = z1.selectID(id)[5];
-				JOptionPane.showMessageDialog(null, "id_term_wymag: "+id_term_wymag);
+				//JOptionPane.showMessageDialog(null, "id_term_wymag: "+id_term_wymag);
 				z1.closeConn();
 				
 				String nazwa_opisu = textAreaNazwaOpisu2.getText();
@@ -268,8 +267,8 @@ public class Zgloszenie2GUI extends JFrame {
 							j--;
 						}
 					}
-					JOptionPane.showMessageDialog(null, "id_statusu 'if': "+id_statusu);
-					JOptionPane.showMessageDialog(null, "nazwa_statusu 'if': "+nazwa_statusu);
+					//JOptionPane.showMessageDialog(null, "id_statusu 'if': "+id_statusu);
+					//JOptionPane.showMessageDialog(null, "nazwa_statusu 'if': "+nazwa_statusu);
 				}
 				else {
 					id_statusu = String.valueOf(id_statusu2);
@@ -290,19 +289,23 @@ public class Zgloszenie2GUI extends JFrame {
 		txtIdZgoszenia.setColumns(10);
 		
 		textNazwaKomorki = new JTextField();
+		textNazwaKomorki.setVisible(false);
 		textNazwaKomorki.setBorder(new TitledBorder(null, "Nazwa kom\u00F3rki", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		textNazwaKomorki.setColumns(10);
 		
 		textNazwaStatusu = new JTextField();
+		textNazwaStatusu.setVisible(false);
 		textNazwaStatusu.setBorder(new TitledBorder(null, "Nazwa Statusu", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		textNazwaStatusu.setColumns(10);
+		
+		JSeparator separator = new JSeparator();
 		GroupLayout gl_panelZgloszenie = new GroupLayout(panelZgloszenie);
 		gl_panelZgloszenie.setHorizontalGroup(
 			gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelZgloszenie.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panelZgloszenie.createSequentialGroup()
+					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panelZgloszenie.createSequentialGroup()
 							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING, false)
 								.addComponent(btnInitialRecords, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addComponent(comboBoxStatus, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -310,20 +313,20 @@ public class Zgloszenie2GUI extends JFrame {
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(textAreaNazwaOpisu2, GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(btnEdytujZgloszenie, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
-									.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING, false)
-										.addComponent(fTextFieldTerminZgl, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnShowZgloszenia, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnAddZgloszenie, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-									.addComponent(fTextFieldTerminWymag, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))))
-						.addGroup(gl_panelZgloszenie.createSequentialGroup()
+							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING, false)
+									.addComponent(fTextFieldTerminZgl, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnShowZgloszenia, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+									.addComponent(btnAddZgloszenie, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
+								.addComponent(fTextFieldTerminWymag, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(Alignment.TRAILING, gl_panelZgloszenie.createSequentialGroup()
 							.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(textNazwaKomorki, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addGap(123)
+							.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnEdytujZgloszenie, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+						.addComponent(separator, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap())
 		);
 		gl_panelZgloszenie.setVerticalGroup(
@@ -347,13 +350,16 @@ public class Zgloszenie2GUI extends JFrame {
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(btnAddZgloszenie, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
 					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnEdytujZgloszenie)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textNazwaKomorki, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(29))
+						.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.BASELINE)
+							.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(textNazwaKomorki, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(23))
 		);
 		panelZgloszenie.setLayout(gl_panelZgloszenie);
 		
