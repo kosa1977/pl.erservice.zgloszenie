@@ -293,18 +293,17 @@ class Zgloszenie {
 		
 		Object[] columnNames = new Object[6];
 		columnNames[0] = "id";
-		columnNames[1] = "nazwa_komorki";
-		columnNames[2] = "nazwa_opisu";
-		columnNames[3] = "nazwa_statusu";
-		columnNames[4] = "data_zgl";
-		columnNames[5] = "data_wymag";
+		columnNames[1] = "Komórka org.";
+		columnNames[2] = "Opis zgł.";
+		columnNames[3] = "Status";
+		columnNames[4] = "data zgł.";
+		columnNames[5] = "data wymag.";
 		mojModel.setColumnIdentifiers(columnNames);
-		
+
 		JTable tabela = new JTable();
 		tabela = table1;
 		table1.setAutoCreateRowSorter(true);
 		tabela.setModel(mojModel);
-		
 		
 		konwersjaI = this.id.toArray(konwersjaI);
 		konwersjaS = this.nazwa_komorki.toArray(konwersjaS);
@@ -313,7 +312,7 @@ class Zgloszenie {
 		konwersjaTermZgl = this.data_zgl.toArray(konwersjaTermZgl);
 		konwersjaTermWymag = this.data_wymag.toArray(konwersjaTermWymag);
 		
-		Object[] obj = new Object[6];
+		Object obj[] = new Object[6];
 		for(int i = 0; i < konwersjaI.length; i++) {
 			obj[0] = konwersjaI[i];
 			obj[1] = konwersjaS[i];
@@ -324,6 +323,7 @@ class Zgloszenie {
 			mojModel.addRow(obj);
 			table1.setRowHeight(i, 60);
 		}
+
 	}
 	
 	public void closeConn() {		// kończy połączenie z bazą danych 'HD.db'
