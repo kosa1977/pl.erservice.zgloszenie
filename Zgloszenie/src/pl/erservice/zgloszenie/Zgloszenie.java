@@ -1,7 +1,8 @@
 package pl.erservice.zgloszenie;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +19,8 @@ class Zgloszenie {
 	private ArrayList<String> nazwa_statusu = new ArrayList<String>();
 	private ArrayList<String> data_zgl = new ArrayList<String>();
 	private ArrayList<String> data_wymag = new ArrayList<String>();
-	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String url = "jdbc:sqlite:HD.db";
+	//private static final String DRIVER = "org.sqlite.JDBC";
+	//private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
 	private Statement st;
 	
@@ -73,7 +74,8 @@ class Zgloszenie {
 	
 	public Zgloszenie() {
 		//konstruktor domyślny
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
 	public Zgloszenie(int id,String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag) {
@@ -83,10 +85,11 @@ class Zgloszenie {
 		this.nazwa_statusu.add(nazwa_statusu);
 		this.data_zgl.add(data_zgl);
 		this.data_wymag.add(data_wymag);
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
-	public void poplaczZbaza() {	// Tworzy lub łączy z bazą danych 'HD.db' i wywoluje metode 'createDBtables'
+	/*public void poplaczZbaza() {	// Tworzy lub łączy z bazą danych 'HD.db' i wywoluje metode 'createDBtables'
 		try{
 			Class.forName(Zgloszenie.DRIVER);
 		}
@@ -102,9 +105,20 @@ class Zgloszenie {
 			e1.printStackTrace();
 		}
 		createDBtables();
-	}
+	}*/
 	
 	public boolean createDBtables() {	// tworzy tabele w bazie jeśli tabela nie istnieje
+		// tu można dać nowy obiekt klasy 'Connection' i: conn = obj; potem st=conn; potem st.execute("PRAGMA foreign_keys = ON");
+		// pamętać, że dla każdej z klas po wywołaniu (poplaczZbaza / Connection) trzeba je 
+		try {
+			conn = PoplaczZbaza.getConnection();
+			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		String createKomorka = "CREATE TABLE IF NOT EXISTS komorka(id_komorki INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 				+ "nazwa_komorki varchar(20) NOT NULL)";
 		String createOpis = "CREATE TABLE IF NOT EXISTS opis(id_opisu INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
