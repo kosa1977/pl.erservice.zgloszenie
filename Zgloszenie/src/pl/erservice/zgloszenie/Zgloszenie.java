@@ -107,7 +107,8 @@ class Zgloszenie {
 		createDBtables();
 	}*/
 	
-	public boolean createDBtables() {	// tworzy tabele w bazie jeśli tabela nie istnieje
+	public boolean createDBtables() {
+		// tworzy tabele w bazie jeśli tabela nie istnieje
 		// tu można dać nowy obiekt klasy 'Connection' i: conn = obj; potem st=conn; potem st.execute("PRAGMA foreign_keys = ON");
 		// pamętać, że dla każdej z klas po wywołaniu (poplaczZbaza / Connection) trzeba je 
 		try {
@@ -173,11 +174,9 @@ class Zgloszenie {
 	}
 	
 	public boolean insertZgloszenie(int id_komorki, int id_term_zgl, int id_term_wymag, int id_opisu, int id_statusu,
-			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag) {	// wstawia dane do tabeli 'zgloszenie' w bazie 'HD.db'
+			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag) {
 		try{
-			//PreparedStatement ps_komorka = conn.prepareStatement("INSERT INTO komorka values(null, ?);");
-			//ps_komorka.setString(1, nazwa_komorki);
-			//ps_komorka.execute();
+			// wstawia dane do tabeli 'zgloszenie' w bazie 'HD.db'
 			
 			PreparedStatement ps_opis = conn.prepareStatement("INSERT INTO opis values(null, ?);");
 			ps_opis.setString(1, nazwa_opisu);
@@ -206,7 +205,7 @@ class Zgloszenie {
 		return true;
 	}
 	
-	public boolean deleteZgloszenie(int id) {			// usuwa wybrany wiersz z tabeli'komorka'
+	public boolean deleteZgloszenie(int id) {			// usuwa wybrany wiersz z tabeli 'zgloszenie'
 		try {
 			PreparedStatement ps = conn.prepareStatement("DELETE FROM zgloszenie WHERE id = ?;");
 			ps.setInt(1, id);
@@ -274,11 +273,7 @@ class Zgloszenie {
 		try {
 			String query = "SELECT id_komorki, id_opisu, id_statusu, id_term_zgl, id_term_wymag FROM zgloszenie WHERE id = " + id;
 			ResultSet wynik = st.executeQuery(query);
-			//int id_komorki = wynik.getInt("id_komorki");
-			//int id_opisu = wynik.getInt("id_opisu");
-			//int id_statusu = wynik.getInt("id_statusu");
-			//int id_term_zgl = wynik.getInt("id_term_zgl");
-			//int id_term_wymag = wynik.getInt("id_term_wymag");
+			
 			for(int i = 1 ; i < 6; i++) {
 				id_wynik[i] = wynik.getInt(i);
 			}
@@ -337,7 +332,6 @@ class Zgloszenie {
 			mojModel.addRow(obj);
 			table1.setRowHeight(i, 60);
 		}
-
 	}
 	
 	public void closeConn() {		// kończy połączenie z bazą danych 'HD.db'
