@@ -1,7 +1,8 @@
 package pl.erservice.zgloszenie;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +15,8 @@ import javax.swing.table.DefaultTableModel;
 class TerminZgl {
 	private ArrayList<Integer> id = new ArrayList<Integer>();
 	private ArrayList<String> data_zgl = new ArrayList<String>();
-	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String url = "jdbc:sqlite:HD.db";
+	//private static final String DRIVER = "org.sqlite.JDBC";
+	//private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
 	private Statement st;
 	private int max_id;
@@ -38,15 +39,18 @@ class TerminZgl {
 	
 	public TerminZgl() {
 		//konstruktor domyślny
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
 	public TerminZgl(int id, String data_zgl) {
 		this.id.add(id);
 		this.data_zgl.add(data_zgl);
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
+	/*
 	public void poplaczZbaza() {	// Tworzy lub łączy z bazą danych 'HD.db' i wywoluje metode 'createDBtables'
 		try{
 			Class.forName(TerminZgl.DRIVER);
@@ -64,8 +68,19 @@ class TerminZgl {
 		}
 		createDBtables();
 	}
+	*/
 	
 	public boolean createDBtables() {	// tworzy tabele w bazie jeśli tabela nie istnieje
+		try {
+			conn = PoplaczZbaza.getConnection();
+			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		String createTerminZgl = "CREATE TABLE IF NOT EXISTS termin_zgl(id_term_zgl INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 				+ "data_zgl varchar(23) NOT NULL)";
 		try{

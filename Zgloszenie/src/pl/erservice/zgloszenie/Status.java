@@ -1,7 +1,8 @@
 package pl.erservice.zgloszenie;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +15,8 @@ import javax.swing.table.DefaultTableModel;
 class Status {
 	private ArrayList<Integer> id = new ArrayList<Integer>();
 	private ArrayList<String> nazwa_statusu = new ArrayList<String>();
-	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String url = "jdbc:sqlite:HD.db";
+	//private static final String DRIVER = "org.sqlite.JDBC";
+	//private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
 	private Statement st;
 	
@@ -37,15 +38,18 @@ class Status {
 	
 	public Status() {
 		//konstruktor domyślny
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
 	public Status(int id, String nazwa_statusu) {
 		this.id.add(id);
 		this.nazwa_statusu.add(nazwa_statusu);
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
+	/*
 	public void poplaczZbaza() {	// Tworzy lub łączy z bazą danych 'HD.db' i wywoluje metode 'createDBtables'
 		try{
 			Class.forName(Status.DRIVER);
@@ -63,8 +67,19 @@ class Status {
 		}
 		createDBtables();
 	}
+	*/
 	
 	public boolean createDBtables() {	// tworzy tabele w bazie jeśli tabela nie istnieje
+		try {
+			conn = PoplaczZbaza.getConnection();
+			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		String createStatus = "CREATE TABLE IF NOT EXISTS status(id_statusu INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 				+ "nazwa_statusu varchar(20) NOT NULL)";
 		try{

@@ -1,7 +1,8 @@
 package pl.erservice.zgloszenie;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,8 +15,8 @@ import javax.swing.table.DefaultTableModel;
 class Komorka  {
 	private ArrayList<Integer> id = new ArrayList<Integer>();
 	private ArrayList<String> nazwa_komorki = new ArrayList<String>();
-	private static final String DRIVER = "org.sqlite.JDBC";
-	private static final String url = "jdbc:sqlite:HD.db";
+	//private static final String DRIVER = "org.sqlite.JDBC";
+	//private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
 	private Statement st;
 	
@@ -37,15 +38,18 @@ class Komorka  {
 	
 	public Komorka() {
 		//konstruktor domyślny
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
 	public Komorka(int id, String nazwa_komorki) {
 		this.id.add(id);
 		this.nazwa_komorki.add(nazwa_komorki);
-		this.poplaczZbaza();
+		//this.poplaczZbaza();
+		this.createDBtables();
 	}
 	
+	/*
 	public void poplaczZbaza() {	// Tworzy lub łączy z bazą danych 'HD.db' i wywoluje metode 'createDBtables'
 		try{
 			Class.forName(Komorka.DRIVER);
@@ -63,8 +67,19 @@ class Komorka  {
 		}
 		createDBtables();
 	}
+	*/
 	
 	public boolean createDBtables() {	// tworzy tabele w bazie jeśli tabela nie istnieje
+		try {
+			conn = PoplaczZbaza.getConnection();
+			st = conn.createStatement();
+			st.execute("PRAGMA foreign_keys = ON");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		String createKomorka = "CREATE TABLE IF NOT EXISTS komorka(id_komorki INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 				+ "nazwa_komorki varchar(20) NOT NULL)";
 		try{
