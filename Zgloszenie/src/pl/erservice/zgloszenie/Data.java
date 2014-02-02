@@ -2,7 +2,6 @@ package pl.erservice.zgloszenie;
 
 import java.io.IOException;
 import java.sql.Connection;
-//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,11 +11,11 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-class TerminZgl {
+class Data {
 	private ArrayList<Integer> id = new ArrayList<Integer>();
 	private ArrayList<String> data_zgl = new ArrayList<String>();
-	//private static final String DRIVER = "org.sqlite.JDBC";
-	//private static final String url = "jdbc:sqlite:HD.db";
+	private ArrayList<String> data_wymag = new ArrayList<String>();
+	private ArrayList<String> data_wyk = new ArrayList<String>();
 	private Connection conn;
 	private Statement st;
 	private int max_id;
@@ -25,50 +24,46 @@ class TerminZgl {
 		return this.id;
 	}
 	
+	public ArrayList<String> getDataZ() {
+		return this.data_zgl;
+	}
+	
+	public ArrayList<String> getDataWymag() {
+		return this.data_wymag;
+	}
+	
+	public ArrayList<String> getDataWyk() {
+		return this.data_wyk;
+	}
+	
 	public void setId(int id) {
 		this.id.add(id);
 	}
 	
-	public ArrayList<String> getData() {
-		return this.data_zgl;
-	}
-	
-	public void setData(String data_zgl) {
+	public void setDataZ(String data_zgl) {
 		this.data_zgl.add(data_zgl);
 	}
 	
-	public TerminZgl() {
+	public void setDataWymag(String data_wymag) {
+		this.data_wymag.add(data_wymag);
+	}
+	
+	public void setDataWyk(String data_wyk) {
+		this.data_wyk.add(data_wyk);
+	}
+	
+	public Data() {
 		//konstruktor domyślny
-		//this.poplaczZbaza();
 		this.createDBtables();
 	}
 	
-	public TerminZgl(int id, String data_zgl) {
+	public Data(int id, String data_zgl, String data_wymag, String data_wyk) {
 		this.id.add(id);
 		this.data_zgl.add(data_zgl);
-		//this.poplaczZbaza();
+		this.data_wymag.add(data_zgl);
+		this.data_wyk.add(data_wyk);
 		this.createDBtables();
 	}
-	
-	/*
-	public void poplaczZbaza() {	// Tworzy lub łączy z bazą danych 'HD.db' i wywoluje metode 'createDBtables'
-		try{
-			Class.forName(TerminZgl.DRIVER);
-		}
-		catch(ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		try{
-			conn = DriverManager.getConnection(url);
-			st = conn.createStatement();
-			st.execute("PRAGMA foreign_keys = ON");
-		}
-		catch(SQLException e1) {
-			e1.printStackTrace();
-		}
-		createDBtables();
-	}
-	*/
 	
 	public boolean createDBtables() {	// tworzy tabele w bazie jeśli tabela nie istnieje
 		try {
@@ -81,10 +76,12 @@ class TerminZgl {
 			e.printStackTrace();
 		}
 		
-		String createTerminZgl = "CREATE TABLE IF NOT EXISTS termin_zgl(id_term_zgl INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-				+ "data_zgl varchar(23) NOT NULL)";
+		String createData = "CREATE TABLE IF NOT EXISTS data(id_data INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+				+ "data_zgl varchar(23) NOT NULL,"
+				+ "data_wymag varchar(23) NOT NULL,"
+				+ "data_wyk varchar(23) )";
 		try{
-			st.execute(createTerminZgl);
+			st.execute(createData);
 		}
 		catch(SQLException e2) {
 			e2.printStackTrace();
@@ -93,10 +90,12 @@ class TerminZgl {
 		return true;
 	}
 	
-	public boolean insertTerminZgl(String data_zgl) {	// wstawia dane do tabeli 'komorka' w bazie 'HD.db'
+	public boolean insertTerminZgl(String data_zgl, String data_wymag, String data_wyk) {	// wstawia dane do tabeli 'komorka' w bazie 'HD.db'
 		try{
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO termin_zgl values(null, ?);");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO data values(null, ?, ?, ?);");
 			ps.setString(1, data_zgl);
+			ps.setString(2, data_wymag);
+			ps.setString(3, data_wyk);
 			ps.execute();
 		}
 		catch(SQLException e3) {
@@ -106,10 +105,10 @@ class TerminZgl {
 		return true;
 	}
 	
-	public boolean deleteTerminZgl(int id_term_zgl) {			// usuwa wybrany wiersz z tabeli'komorka'
+	public boolean deleteTerminZgl(int id_data) {			// usuwa wybrany wiersz z tabeli'komorka'
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM termin_zgl WHERE id_term_zgl = ?;");
-			ps.setInt(1, id_term_zgl);
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM data WHERE id_term_zgl = ?;");
+			ps.setInt(1, id_data);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -118,11 +117,13 @@ class TerminZgl {
 		return true;
 	}
 	
-	public boolean modifyTerminZgl(int id_term_zgl, String data_zgl)	{
+	public boolean modifyTerminZgl(int id_data, String data_zgl, String data_wymag, String data_wyk)	{
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE termin_zgl SET data_zgl = ? WHERE id_term_zgl = ?;");
+			PreparedStatement ps = conn.prepareStatement("UPDATE termin_zgl SET data_zgl = ?, data_wymag = ?, data_wyk = ? WHERE id_term_zgl = ?;");
 			ps.setString(1, data_zgl);
-			ps.setInt(2, id_term_zgl);
+			ps.setString(2, data_wymag);
+			ps.setString(3, data_wyk);
+			ps.setInt(4, id_data);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,10 +134,12 @@ class TerminZgl {
 	
 	public void selectTerminZgl() {							// podstawia wynik zapytania SQL do metody set i przekazuje pól klasy 'Komorka'.
 		try{
-			ResultSet wynik = st.executeQuery("SELECT * FROM termin_zgl");
+			ResultSet wynik = st.executeQuery("SELECT * FROM data");
 			while(wynik.next()) {
-				this.setId(wynik.getInt("id_term_zgl"));
-				this.setData(wynik.getString("data_zgl"));
+				this.setId(wynik.getInt("id_data"));
+				this.setDataZ(wynik.getString("data_zgl"));
+				this.setDataWymag(wynik.getString("data_wymag"));
+				this.setDataWyk(wynik.getString("data_wyk"));
 			}
 		}
 		catch(SQLException e5) {
@@ -147,7 +150,9 @@ class TerminZgl {
 	public void showTerminZgl(JTable table1 , DefaultTableModel model)	{				// wywołuje metode 'selectKomorka'; pobiera dane z bazy;
 		this.selectTerminZgl();								// za pomoca metod klasy 'Komorka' podstawia dane do pól i konfiguruje 'DefaultTableModel';
 		Integer konwersjaI[] = new Integer[this.id.size()]; // podstawia do JTable 'tabela' model 'DefaultTableModel' 
-		String konwersjaS[] = new String[this.data_zgl.size()];
+		String konwersjaZgl[] = new String[this.data_zgl.size()];
+		String konwersjaWymag[] = new String[this.data_wymag.size()];
+		String konwersjaWyk[] = new String[this.data_wyk.size()];
 		
 		@SuppressWarnings("serial")	//krzykacz dot. serializacji obiektu
 		DefaultTableModel mojModel = new DefaultTableModel() {
@@ -157,9 +162,11 @@ class TerminZgl {
 			}
 		};
 		
-		Object[] columnNames = new Object[2];
-		columnNames[0] = "id_term_zgl";
+		Object[] columnNames = new Object[4];
+		columnNames[0] = "id_data";
 		columnNames[1] = "data_zgl";
+		columnNames[2] = "data_wymag";
+		columnNames[3] = "data_wyk";
 		mojModel.setColumnIdentifiers(columnNames);
 		
 		JTable tabela = new JTable();
@@ -168,20 +175,22 @@ class TerminZgl {
 		
 		
 		konwersjaI = this.id.toArray(konwersjaI);
-		konwersjaS = this.data_zgl.toArray(konwersjaS);
+		konwersjaZgl = this.data_zgl.toArray(konwersjaZgl);
 		
-		Object[] obj = new Object[2];
+		Object[] obj = new Object[4];
 		for(int i = 0; i < konwersjaI.length; i++) {
 			obj[0] = konwersjaI[i];
-			obj[1] = konwersjaS[i];
+			obj[1] = konwersjaZgl[i];
+			obj[2] = konwersjaWymag[i];
+			obj[3] = konwersjaWyk[i];
 			mojModel.addRow(obj);
 		}
 	}
 	
-	public int tTerminZgl() {
+	public int tData() {
 		this.selectTerminZgl();
 		try{
-			ResultSet wynik = st.executeQuery("SELECT seq FROM sqlite_sequence WHERE name = 'termin_zgl'");
+			ResultSet wynik = st.executeQuery("SELECT seq FROM sqlite_sequence WHERE name = 'data'");
 			this.max_id = wynik.getInt("seq");
 			max_id = max_id + 1;
 		}

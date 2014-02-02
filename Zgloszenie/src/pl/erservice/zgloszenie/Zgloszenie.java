@@ -19,6 +19,7 @@ class Zgloszenie {
 	private ArrayList<String> nazwa_statusu = new ArrayList<String>();
 	private ArrayList<String> data_zgl = new ArrayList<String>();
 	private ArrayList<String> data_wymag = new ArrayList<String>();
+	private ArrayList<String> data_wyk = new ArrayList<String>();
 	//private static final String DRIVER = "org.sqlite.JDBC";
 	//private static final String url = "jdbc:sqlite:HD.db";
 	private Connection conn;
@@ -47,6 +48,9 @@ class Zgloszenie {
 	public ArrayList<String> getDataWymag() {
 		return this.data_wymag;
 	}
+	public ArrayList<String> getDataWyk() {
+		return this.data_wyk;
+	}
 	
 	public void setId(int id) {
 		this.id.add(id);
@@ -72,19 +76,24 @@ class Zgloszenie {
 		this.data_wymag.add(data_wymag);
 	}
 	
+	public void setDataWyk(String data_wyk) {
+		this.data_wyk.add(data_wyk);
+	}
+	
 	public Zgloszenie() {
 		//konstruktor domyślny
 		//this.poplaczZbaza();
 		this.createDBtables();
 	}
 	
-	public Zgloszenie(int id,String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag) {
+	public Zgloszenie(int id,String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag, String data_wyk) {
 		this.id.add(id);
 		this.nazwa_komorki.add(nazwa_komorki);
 		this.nazwa_opisu.add(nazwa_opisu);
 		this.nazwa_statusu.add(nazwa_statusu);
 		this.data_zgl.add(data_zgl);
 		this.data_wymag.add(data_wymag);
+		this.data_wyk.add(data_wyk);
 		//this.poplaczZbaza();
 		this.createDBtables();
 	}
@@ -126,23 +135,20 @@ class Zgloszenie {
 				+ "nazwa_opisu varchar(20) NOT NULL)";
 		String createStatus = "CREATE TABLE IF NOT EXISTS status(id_statusu INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 				+ "nazwa_statusu varchar(20) NOT NULL)";
-		String createTerminZgl = "CREATE TABLE IF NOT EXISTS termin_zgl(id_term_zgl INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-				+ "data_zgl varchar(20) NOT NULL)";
-		String createTerminWymag = "CREATE TABLE IF NOT EXISTS termin_wymag(id_term_wymag INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-				+ "data_wymag varchar(23) NOT NULL)";
+		String createData = "CREATE TABLE IF NOT EXISTS data(id_data INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+				+ "data_zgl varchar(23) NOT NULL, data_wymag varchar(23) NOT NULL, data_wyk varchar(23) )";
+
 		String createZgloszenie = "CREATE TABLE IF NOT EXISTS zgloszenie( id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-				+ "id_komorki int NOT NULL, id_opisu int NOT NULL, id_statusu int NOT NULL, id_term_zgl int NOT NULL, id_term_wymag int NOT NULL,"
-				+ "CONSTRAINT k_komorka_id_komorki FOREIGN KEY(id_komorki) REFERENCES komorka(id_komorki) ON UPDATE CASCADE ON DELETE CASCADE,"
+				+ "id_komorki int NOT NULL, id_opisu int NOT NULL, id_statusu int NOT NULL, id_data int NOT NULL,"
+				+ "CONSTRAINT fk_komorka_id_komorki FOREIGN KEY(id_komorki) REFERENCES komorka(id_komorki) ON UPDATE CASCADE ON DELETE CASCADE,"
 				+ "CONSTRAINT fk_opis_id_opisu FOREIGN KEY(id_opisu) REFERENCES opis(id_opisu) ON UPDATE CASCADE ON DELETE CASCADE,"
 				+ "CONSTRAINT fk_status_id_statusu FOREIGN KEY(id_statusu) REFERENCES status(id_statusu) ON UPDATE CASCADE ON DELETE CASCADE,"
-				+ "CONSTRAINT fk_termin_zgl_id_term_zgl FOREIGN KEY(id_term_zgl) REFERENCES termin_zgl (id_term_zgl) ON UPDATE CASCADE ON DELETE CASCADE,"
-				+ "CONSTRAINT fk_termin_wymag_id_term_wymag FOREIGN KEY(id_term_wymag) REFERENCES termin_wymag (id_term_wymag) ON UPDATE CASCADE ON DELETE CASCADE)";
+				+ "CONSTRAINT fk_data_id_data FOREIGN KEY(id_data) REFERENCES data (id_data) ON UPDATE CASCADE ON DELETE CASCADE )";
 		try{
 			st.execute(createKomorka);
 			st.execute(createOpis);
 			st.execute(createStatus);
-			st.execute(createTerminZgl);
-			st.execute(createTerminWymag);
+			st.execute(createData);
 			st.execute(createZgloszenie);
 		}
 		catch(SQLException e2) {
@@ -158,13 +164,10 @@ class Zgloszenie {
 			ps_initial_opis.setString(1, "initial record");
 			ps_initial_opis.execute();
 			
-			PreparedStatement ps_initial_termin_zgl = conn.prepareStatement("INSERT INTO termin_zgl values(null, ?)");
-			ps_initial_termin_zgl.setString(1, "2000-10-10 15:01");
-			ps_initial_termin_zgl.execute();
-			
-			PreparedStatement ps_initial_termin_wymag = conn.prepareStatement("INSERT INTO termin_wymag values(null, ?)");
-			ps_initial_termin_wymag.setString(1, "2001-10-11 15:30");
-			ps_initial_termin_wymag.execute();
+			PreparedStatement ps_initial_tdata = conn.prepareStatement("INSERT INTO data values(null, ?, ?, null)");
+			ps_initial_tdata.setString(1, "2000-10-10 15:01");
+			ps_initial_tdata.setString(2, "2000-10-10 15:30");
+			ps_initial_tdata.execute();
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -173,8 +176,8 @@ class Zgloszenie {
 		return true;
 	}
 	
-	public boolean insertZgloszenie(int id_komorki, int id_term_zgl, int id_term_wymag, int id_opisu, int id_statusu,
-			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag) {
+	public boolean insertZgloszenie(int id_komorki, int id_data, int id_opisu, int id_statusu,
+			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag, String data_wyk) {
 		try{
 			// wstawia dane do tabeli 'zgloszenie' w bazie 'HD.db'
 			
@@ -182,20 +185,17 @@ class Zgloszenie {
 			ps_opis.setString(1, nazwa_opisu);
 			ps_opis.execute();
 			
-			PreparedStatement ps_termin_zgl = conn.prepareStatement("INSERT INTO termin_zgl values(null, ?);");
-			ps_termin_zgl.setString(1, data_zgl);
-			ps_termin_zgl.execute();
+			PreparedStatement ps_data = conn.prepareStatement("INSERT INTO data values(null, ?, ?, ?);");
+			ps_data.setString(1, data_zgl);
+			ps_data.setString(2, data_wymag);
+			ps_data.setString(3, data_wyk);
+			ps_data.execute();
 			
-			PreparedStatement ps_termin_wymag = conn.prepareStatement("INSERT INTO termin_wymag values(null, ?);");
-			ps_termin_wymag.setString(1, data_wymag);
-			ps_termin_wymag.execute();
-			
-			PreparedStatement ps_zgloszenie = conn.prepareStatement("INSERT INTO zgloszenie values(null, ?, ?, ?, ?, ?);");
+			PreparedStatement ps_zgloszenie = conn.prepareStatement("INSERT INTO zgloszenie values(null, ?, ?, ?, ?);");
 			ps_zgloszenie.setInt(1, id_komorki);
 			ps_zgloszenie.setInt(2, id_opisu);
 			ps_zgloszenie.setInt(3, id_statusu);
-			ps_zgloszenie.setInt(4, id_term_zgl);
-			ps_zgloszenie.setInt(5, id_term_wymag);
+			ps_zgloszenie.setInt(4, id_data);
 			ps_zgloszenie.execute();
 		}
 		catch(SQLException e3) {
@@ -217,32 +217,28 @@ class Zgloszenie {
 		return true;
 	}
 	
-	public boolean modifyZgloszenie(int id_komorki, int id_opisu, int id_statusu, int id_term_zgl, int id_term_wymag, int id,
-			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag)	{
+	public boolean modifyZgloszenie(int id_komorki, int id_opisu, int id_statusu, int id_data, int id,
+			String nazwa_komorki, String nazwa_opisu, String nazwa_statusu, String data_zgl, String data_wymag, String data_wyk)	{
 		try {
 			PreparedStatement ps_opis = conn.prepareStatement("UPDATE opis SET nazwa_opisu = ? WHERE id_opisu = ?;");
 			ps_opis.setString(1, nazwa_opisu);
 			ps_opis.setInt(2, id_opisu);
 			ps_opis.executeUpdate();
 
-			PreparedStatement ps_term_zgl = conn.prepareStatement("UPDATE termin_zgl SET data_zgl = ? WHERE id_term_zgl = ?;");
-			ps_term_zgl.setString(1, data_zgl);
-			ps_term_zgl.setInt(2, id_term_zgl);
-			ps_term_zgl.executeUpdate();
-			
-			PreparedStatement ps_term_wymag = conn.prepareStatement("UPDATE termin_wymag SET data_wymag = ? WHERE id_term_wymag = ?;");
-			ps_term_wymag.setString(1, data_wymag);
-			ps_term_wymag.setInt(2, id_term_wymag);
-			ps_term_wymag.executeUpdate();
+			PreparedStatement ps_data = conn.prepareStatement("UPDATE data SET data_zgl = ?, data_wymag = ?, data_wyk = ? WHERE id_data = ?;");
+			ps_data.setString(1, data_zgl);
+			ps_data.setString(2, data_wymag);
+			ps_data.setString(3, data_wyk);
+			ps_data.setInt(4, id_data);
+			ps_data.executeUpdate();
 			
 			//najpierw modyfikujemy pozostałe tabele poza 'komorka' i 'status' (tym ewentualnie zmienia się id w 'zgloszenie') na końcu 'zgloszenie'
-			PreparedStatement ps = conn.prepareStatement("UPDATE zgloszenie SET id_komorki = ?, id_opisu = ?, id_statusu = ?, id_term_zgl = ?, id_term_wymag = ? WHERE id = ?;");
+			PreparedStatement ps = conn.prepareStatement("UPDATE zgloszenie SET id_komorki = ?, id_opisu = ?, id_statusu = ?, id_data = ? WHERE id = ?;");
 			ps.setInt(1, id_komorki);
 			ps.setInt(2, id_opisu);
 			ps.setInt(3, id_statusu);
-			ps.setInt(4, id_term_zgl);
-			ps.setInt(5, id_term_wymag);
-			ps.setInt(6, id);
+			ps.setInt(4, id_data);
+			ps.setInt(5, id);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -253,7 +249,7 @@ class Zgloszenie {
 	
 	public void selectZgloszenie() {					// podstawia wynik zapytania SQL do metody set i przekazuje pól klasy 'Zgloszenie'.
 		try{
-			ResultSet wynik = st.executeQuery("SELECT z.id, k.nazwa_komorki, t.data_zgl, tw.data_wymag, o.nazwa_opisu, s.nazwa_statusu FROM zgloszenie AS z LEFT JOIN komorka AS k ON z.id_komorki = k.id_komorki LEFT JOIN opis AS o ON z.id_opisu = o.id_opisu LEFT JOIN status AS s ON z.id_statusu = s.id_statusu LEFT JOIN termin_zgl AS t ON z.id_term_zgl = t.id_term_zgl LEFT JOIN termin_wymag AS tw ON z.id_term_wymag = tw.id_term_wymag ORDER BY z.id;");
+			ResultSet wynik = st.executeQuery("SELECT z.id, k.nazwa_komorki, d.data_zgl, d.data_wymag, d.data_wyk, o.nazwa_opisu, s.nazwa_statusu FROM zgloszenie AS z LEFT JOIN komorka AS k ON z.id_komorki = k.id_komorki LEFT JOIN opis AS o ON z.id_opisu = o.id_opisu LEFT JOIN status AS s ON z.id_statusu = s.id_statusu LEFT JOIN data AS d ON z.id_data = d.id_data ORDER BY z.id;");
 			while(wynik.next()) {
 				this.setId(wynik.getInt("id"));
 				this.setNazwaKomorki(wynik.getString("nazwa_komorki"));
@@ -261,6 +257,7 @@ class Zgloszenie {
 				this.setNazwaStatusu(wynik.getString("nazwa_statusu"));
 				this.setDataZgl(wynik.getString("data_zgl"));
 				this.setDataWymag(wynik.getString("data_wymag"));
+				this.setDataWyk(wynik.getString("data_wyk"));
 			}
 		}
 		catch(SQLException e5) {
@@ -269,12 +266,12 @@ class Zgloszenie {
 	}
 	
 	public int[] selectID(int id) {
-		int id_wynik[] = new int[6];
+		int id_wynik[] = new int[5];
 		try {
-			String query = "SELECT id_komorki, id_opisu, id_statusu, id_term_zgl, id_term_wymag FROM zgloszenie WHERE id = " + id;
+			String query = "SELECT id_komorki, id_opisu, id_statusu, id_data FROM zgloszenie WHERE id = " + id;
 			ResultSet wynik = st.executeQuery(query);
 			
-			for(int i = 1 ; i < 6; i++) {
+			for(int i = 1 ; i < 5; i++) {
 				id_wynik[i] = wynik.getInt(i);
 			}
 		} catch (SQLException e) {
@@ -291,6 +288,7 @@ class Zgloszenie {
 		String konwersjaStatusu[] = new String[this.nazwa_statusu.size()];
 		String konwersjaTermZgl[] = new String[this.data_zgl.size()];
 		String konwersjaTermWymag[] = new String[this.data_wymag.size()];
+		String konwersjaTermWyk[] = new String[this.data_wyk.size()];
 		
 		@SuppressWarnings("serial")	//krzykacz dot. serializacji obiektu
 		DefaultTableModel mojModel = new DefaultTableModel() {
@@ -300,13 +298,14 @@ class Zgloszenie {
 			}
 		};
 		
-		Object[] columnNames = new Object[6];
+		Object[] columnNames = new Object[7];
 		columnNames[0] = "id";
 		columnNames[1] = "Komórka org.";
 		columnNames[2] = "Opis zgł.";
 		columnNames[3] = "Status";
 		columnNames[4] = "data zgł.";
 		columnNames[5] = "data wymag.";
+		columnNames[6] = "data wyk.";
 		mojModel.setColumnIdentifiers(columnNames);
 
 		JTable tabela = new JTable();
@@ -320,8 +319,9 @@ class Zgloszenie {
 		konwersjaStatusu = this.nazwa_statusu.toArray(konwersjaStatusu);
 		konwersjaTermZgl = this.data_zgl.toArray(konwersjaTermZgl);
 		konwersjaTermWymag = this.data_wymag.toArray(konwersjaTermWymag);
+		konwersjaTermWyk = this.data_wyk.toArray(konwersjaTermWyk);
 		
-		Object obj[] = new Object[6];
+		Object obj[] = new Object[7];
 		for(int i = 0; i < konwersjaI.length; i++) {
 			obj[0] = konwersjaI[i];
 			obj[1] = konwersjaS[i];
@@ -329,6 +329,7 @@ class Zgloszenie {
 			obj[3] = konwersjaStatusu[i];
 			obj[4] = konwersjaTermZgl[i];
 			obj[5] = konwersjaTermWymag[i];
+			obj[6] = konwersjaTermWyk[i];
 			mojModel.addRow(obj);
 			table1.setRowHeight(i, 60);
 		}
