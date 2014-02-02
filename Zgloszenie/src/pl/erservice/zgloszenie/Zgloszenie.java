@@ -158,6 +158,24 @@ class Zgloszenie {
 		return true;
 	}
 	
+	public int[] isInitialRecordExists(){
+		int tabID[] = new int[2];
+		try{
+			ResultSet wynik = st.executeQuery("SELECT opis.id_opisu, data.id_data FROM opis, data");
+			tabID[0] = wynik.getInt("opis.id_opisu");
+			tabID[1] = wynik.getInt("data.id_data");
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		if( (tabID[0] >= 1) && (tabID[1] >= 1) ) {
+			return tabID;
+		}
+		else {
+			return null;
+		}
+	}
+	
 	public boolean insertInitialRecords() {
 		try {
 			PreparedStatement ps_initial_opis = conn.prepareStatement("INSERT INTO opis values(null, ?);");

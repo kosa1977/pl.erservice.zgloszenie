@@ -78,7 +78,7 @@ public class Zgloszenie2GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public Zgloszenie2GUI() {
-		setTitle("HelpDesk SRKK v0.270alpha; bulid 0700 by Jełop");
+		setTitle("HelpDesk SRKK v0.280alpha; bulid 0710 by Jełop");
 		setBounds(100, 100, 700, 650);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new GridLayout(2, 1, 500, 0));
@@ -100,7 +100,7 @@ public class Zgloszenie2GUI extends JFrame {
 		textAreaNazwaOpisu2.setLineWrap(true);
 		
 		Komorka kom = new Komorka();
-		final JComboBox<String> comboBoxKomorka = new JComboBox<String>(kom.tKomorka()); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
+		final JComboBox<String> comboBoxKomorka = new JComboBox<String>(/*kom.tKomorka()*/); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
 		comboBoxKomorka.setBorder(new TitledBorder(null, "Wybierz kom\u00F3rk\u0119", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		comboBoxKomorka.setName("");
 		comboBoxKomorka.setToolTipText("Wybierz komórkę organizacyjną");
@@ -109,7 +109,7 @@ public class Zgloszenie2GUI extends JFrame {
 		kom.closeConn();
 		
 		Status stat = new Status();
-		final JComboBox<String> comboBoxStatus = new JComboBox<String>(stat.tStatus()); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
+		final JComboBox<String> comboBoxStatus = new JComboBox<String>(/*stat.tStatus()*/); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
 		comboBoxStatus.setBorder(new TitledBorder(null, "Wybierz status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		comboBoxStatus.setToolTipText("Wybierz status zgłoszenia");
 		comboBoxStatus.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -314,6 +314,18 @@ public class Zgloszenie2GUI extends JFrame {
 		fTextFieldTerminWyk = new JFormattedTextField(formatter);
 		fTextFieldTerminWyk.setToolTipText("Data wykonania Zgłoszenia");
 		fTextFieldTerminWyk.setBorder(new TitledBorder(null, "Data Wykonania", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		JButton btnDelZgloszenie = new JButton("Usuń zgłoszenie");
+		btnDelZgloszenie.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//tu kod usuwający wybrane zgłoszenie
+				Zgloszenie zgl3 = new Zgloszenie();
+				int id;
+				id = Integer.parseInt(txtIdZgoszenia.getText());
+				zgl3.deleteZgloszenie(id);
+			}
+		});
+		btnDelZgloszenie.setToolTipText("Usuń wybrane zgłoszenie");
 
 		
 		GroupLayout gl_panelZgloszenie = new GroupLayout(panelZgloszenie);
@@ -322,71 +334,74 @@ public class Zgloszenie2GUI extends JFrame {
 				.addGroup(gl_panelZgloszenie.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(comboBoxStatus, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(comboBoxKomorka, 0, 174, Short.MAX_VALUE))
+						.addComponent(btnInitialRecords, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblDateTime, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(textAreaNazwaOpisu2, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
+						.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_panelZgloszenie.createSequentialGroup()
-							.addComponent(lblDateTime, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-							.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(56)
 							.addComponent(textNazwaKomorki, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(30)
-							.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panelZgloszenie.createSequentialGroup()
-							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING, false)
-									.addComponent(comboBoxStatus, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-									.addComponent(comboBoxKomorka, 0, 174, Short.MAX_VALUE))
-								.addComponent(btnInitialRecords, GroupLayout.PREFERRED_SIZE, 174, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addComponent(textAreaNazwaOpisu2, GroupLayout.PREFERRED_SIZE, 293, GroupLayout.PREFERRED_SIZE)
-							.addGap(18, 18, Short.MAX_VALUE)
-							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING)
-								.addComponent(fTextFieldTerminZgl, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-								.addComponent(fTextFieldTerminWymag, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-								.addComponent(fTextFieldTerminWyk, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnShowZgloszenia, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnAddZgloszenie, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(btnEdytujZgloszenie, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING, false)
+						.addComponent(fTextFieldTerminZgl, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+						.addComponent(fTextFieldTerminWymag, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+						.addComponent(fTextFieldTerminWyk, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnShowZgloszenia, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+						.addComponent(btnAddZgloszenie, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+						.addComponent(btnEdytujZgloszenie, GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+						.addComponent(btnDelZgloszenie, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		gl_panelZgloszenie.setVerticalGroup(
 			gl_panelZgloszenie.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panelZgloszenie.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.BASELINE, false)
-						.addComponent(textAreaNazwaOpisu2, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
-						.addGroup(gl_panelZgloszenie.createSequentialGroup()
-							.addComponent(fTextFieldTerminZgl, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(5)
-							.addComponent(fTextFieldTerminWymag, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(5)
-							.addComponent(fTextFieldTerminWyk, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnShowZgloszenia, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-							.addGap(10))
-						.addGroup(gl_panelZgloszenie.createSequentialGroup()
-							.addComponent(comboBoxKomorka, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-							.addGap(11)
-							.addComponent(comboBoxStatus, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
-							.addGap(40)
-							.addComponent(btnInitialRecords, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
 					.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panelZgloszenie.createSequentialGroup()
-							.addGap(24)
-							.addComponent(btnEdytujZgloszenie)
-							.addGap(12)
-							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textNazwaKomorki, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+							.addContainerGap()
+							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.BASELINE, false)
+								.addComponent(textAreaNazwaOpisu2, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_panelZgloszenie.createSequentialGroup()
+									.addComponent(fTextFieldTerminZgl, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(5)
+									.addComponent(fTextFieldTerminWymag, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(5)
+									.addComponent(fTextFieldTerminWyk, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(btnShowZgloszenia, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+									.addGap(10))
+								.addGroup(gl_panelZgloszenie.createSequentialGroup()
+									.addComponent(comboBoxKomorka, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+									.addGap(11)
+									.addComponent(comboBoxStatus, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+									.addGap(40)
+									.addComponent(btnInitialRecords, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+							.addGroup(gl_panelZgloszenie.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panelZgloszenie.createSequentialGroup()
+									.addGap(18)
+									.addComponent(txtIdZgoszenia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(lblDateTime, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panelZgloszenie.createSequentialGroup()
+									.addGap(12)
+									.addComponent(textNazwaKomorki, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(textNazwaStatusu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panelZgloszenie.createSequentialGroup()
+									.addGap(23)
+									.addComponent(btnEdytujZgloszenie)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnDelZgloszenie, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))))
 						.addGroup(gl_panelZgloszenie.createSequentialGroup()
-							.addGap(67)
-							.addComponent(lblDateTime, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
+							.addGap(171)
+							.addComponent(btnAddZgloszenie, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-				.addGroup(gl_panelZgloszenie.createSequentialGroup()
-					.addGap(171)
-					.addComponent(btnAddZgloszenie, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(83, Short.MAX_VALUE))
 		);
 		panelZgloszenie.setLayout(gl_panelZgloszenie);
 		
