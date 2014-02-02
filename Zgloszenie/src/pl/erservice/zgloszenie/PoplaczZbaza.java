@@ -12,7 +12,7 @@ class PoplaczZbaza {
 	public static Connection getConnection() throws SQLException, IOException {
 		Properties prop = new Properties();
 		try (
-				FileInputStream in = new FileInputStream( new File("src/hd.properties")))
+				FileInputStream in = new FileInputStream( new File("hd.properties")))
 
 		{
 			prop.load(in);

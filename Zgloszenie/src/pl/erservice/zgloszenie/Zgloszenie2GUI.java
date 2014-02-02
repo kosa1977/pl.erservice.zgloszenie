@@ -106,7 +106,7 @@ public class Zgloszenie2GUI extends JFrame {
 		textAreaNazwaOpisu2.setLineWrap(true);
 		
 		Komorka kom = new Komorka();
-		final JComboBox<String> comboBoxKomorka = new JComboBox<String>(/*kom.tKomorka()*/); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
+		final JComboBox<String> comboBoxKomorka = new JComboBox<String>(kom.tKomorka()); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
 		comboBoxKomorka.setBorder(new TitledBorder(null, "Wybierz kom\u00F3rk\u0119", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		comboBoxKomorka.setName("");
 		comboBoxKomorka.setToolTipText("Wybierz komórkę organizacyjną");
@@ -115,7 +115,7 @@ public class Zgloszenie2GUI extends JFrame {
 		kom.closeConn();
 		
 		Status stat = new Status();
-		final JComboBox<String> comboBoxStatus = new JComboBox<String>(/*stat.tStatus()*/); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
+		final JComboBox<String> comboBoxStatus = new JComboBox<String>(stat.tStatus()); //usunąć komentarz po kompilacji !!!!!!!!!!!!!!!!!!!!!!!!!
 		comboBoxStatus.setBorder(new TitledBorder(null, "Wybierz status", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		comboBoxStatus.setToolTipText("Wybierz status zgłoszenia");
 		comboBoxStatus.setFont(new Font("Tahoma", Font.PLAIN, 11));
