@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 class Zgloszenie {
 	private ArrayList<Integer> id = new ArrayList<Integer>();
@@ -319,17 +320,33 @@ class Zgloszenie {
 		Object[] columnNames = new Object[7];
 		columnNames[0] = "id";
 		columnNames[1] = "Komórka org.";
-		columnNames[2] = "Opis zgł.";
+		columnNames[2] = "Opis zgłoszenia";
 		columnNames[3] = "Status";
 		columnNames[4] = "data zgł.";
 		columnNames[5] = "data wymag.";
 		columnNames[6] = "data wyk.";
 		mojModel.setColumnIdentifiers(columnNames);
-
+		
 		JTable tabela = new JTable();
 		tabela = table1;
 		table1.setAutoCreateRowSorter(true);
-		tabela.setModel(mojModel);
+		tabela.setModel(mojModel);		
+		
+		int colIndex_id = 0;
+		TableColumn col_id = tabela.getColumnModel().getColumn(colIndex_id);
+		col_id.setMaxWidth(30);
+		int colIndex_komorka = 1;
+		TableColumn col_komorka = tabela.getColumnModel().getColumn(colIndex_komorka);
+		col_komorka.setMinWidth(100);
+		col_komorka.setMaxWidth(100);
+		int colIndex_opis = 2;
+		TableColumn col_opis = tabela.getColumnModel().getColumn(colIndex_opis);
+		col_opis.setMinWidth(200);
+		int colIndex_status = 3;
+		TableColumn col_status = tabela.getColumnModel().getColumn(colIndex_status);
+		col_status.setMinWidth(120);
+		col_status.setMaxWidth(120);
+		
 		
 		konwersjaI = this.id.toArray(konwersjaI);
 		konwersjaS = this.nazwa_komorki.toArray(konwersjaS);
@@ -338,6 +355,7 @@ class Zgloszenie {
 		konwersjaTermZgl = this.data_zgl.toArray(konwersjaTermZgl);
 		konwersjaTermWymag = this.data_wymag.toArray(konwersjaTermWymag);
 		konwersjaTermWyk = this.data_wyk.toArray(konwersjaTermWyk);
+		
 		
 		Object obj[] = new Object[7];
 		for(int i = 0; i < konwersjaI.length; i++) {
@@ -349,7 +367,7 @@ class Zgloszenie {
 			obj[5] = konwersjaTermWymag[i];
 			obj[6] = konwersjaTermWyk[i];
 			mojModel.addRow(obj);
-			table1.setRowHeight(i, 60);
+			table1.setRowHeight(table1.getRowHeight()*1);
 		}
 	}
 	
