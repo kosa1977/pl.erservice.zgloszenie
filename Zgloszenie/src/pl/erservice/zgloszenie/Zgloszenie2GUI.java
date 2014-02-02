@@ -92,7 +92,7 @@ public class Zgloszenie2GUI extends JFrame {
 		
 		JPanel panelZgloszenie = new JPanel();
 		panelZgloszenie.setBackground(new Color(70, 130, 180));
-		tabbedPane.addTab("Tabela Zgłoszenie", new ImageIcon("src/png/clip.png"), panelZgloszenie);
+		tabbedPane.addTab("Tabela Zgłoszenie", new ImageIcon("png/clip.png"), panelZgloszenie);
 		tabbedPane.setEnabledAt(0, true);
 		
 		textAreaNazwaOpisu2 = new JTextArea();
@@ -410,7 +410,7 @@ public class Zgloszenie2GUI extends JFrame {
 		JPanel panelKomorka = new JPanel();
 		panelKomorka.setBackground(new Color(0, 128, 128));
 		panelKomorka.setLayout(null);
-		tabbedPane.addTab("Tabela Komórka",new ImageIcon("src/png/komorka.png"), panelKomorka);	//dodaje panelKomorka do zakładki
+		tabbedPane.addTab("Tabela Komórka",new ImageIcon("png/komorka.png"), panelKomorka);	//dodaje panelKomorka do zakładki
 		tabbedPane.setEnabledAt(1, true);
 		
 		JButton btnKomorka = new JButton("Dodaj komórkę");
@@ -491,7 +491,7 @@ public class Zgloszenie2GUI extends JFrame {
 		JPanel panelStatus = new JPanel();
 		panelStatus.setBackground(new Color(46, 139, 87));
 		panelStatus.setFont(new Font("Tahoma", Font.PLAIN, 11));		
-		tabbedPane.addTab("Tabela Status", new ImageIcon("src/png/mainicon.png"), panelStatus);
+		tabbedPane.addTab("Tabela Status", new ImageIcon("png/mainicon.png"), panelStatus);
 		tabbedPane.setEnabledAt(2, true);
 		
 		JButton btnShowStatus = new JButton("Show Status");
